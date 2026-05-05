@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { GitHub, Twitter, Linkedin } from 'lucide-react';
+import { GitHub, Twitter, LinkedIn } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -40,9 +40,9 @@ const Footer = () => {
           <div>
             <h4 className="font-bold text-slate-900 mb-4">Social</h4>
             <div className="flex gap-4">
-              <a href="#" className="text-slate-400 hover:text-nexus-500"><Github size={20} /></a>
+              <a href="#" className="text-slate-400 hover:text-nexus-500"><GitHub size={20} /></a>
               <a href="#" className="text-slate-400 hover:text-nexus-500"><Twitter size={20} /></a>
-              <a href="#" className="text-slate-400 hover:text-nexus-500"><Linkedin size={20} /></a>
+              <a href="#" className="text-slate-400 hover:text-nexus-500"><LinkedIn size={20} /></a>
             </div>
           </div>
         </div>
