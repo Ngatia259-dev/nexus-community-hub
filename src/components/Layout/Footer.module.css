@@ -1,0 +1,121 @@
+.footer {
+  background-color: white;
+  border-top: 1px solid var(--nexus-border);
+  padding: 48px 16px;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.brandSection {
+  grid-column: span 2;
+}
+
+@media (min-width: 768px) {
+  .brandSection {
+    grid-column: span 1;
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.logoIcon {
+  width: 24px;
+  height: 24px;
+  background-color: var(--nexus-primary);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+}
+
+.tagline {
+  font-size: 14px;
+  color: #64748b;
+  max-width: 320px;
+}
+
+.heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 16px;
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+
+.link {
+  font-size: 14px;
+  color: #475569;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: var(--nexus-primary);
+}
+
+.social {
+  display: flex;
+  gap: 16px;
+}
+
+.socialLink {
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.socialLink:hover {
+  color: var(--nexus-primary);
+}
+
+.bottom {
+  padding-top: 32px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+@media (min-width: 768px) {
+  .bottom {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.legalLinks {
+  display: flex;
+  gap: 24px;
+}

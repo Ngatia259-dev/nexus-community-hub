@@ -1,0 +1,33 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.neutral {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.primary {
+  background-color: #f0f9ff;
+  color: var(--nexus-primary);
+}
+
+.success {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.warning {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
+.error {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
