@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Twitter, Linkedin } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const Footer = () => {
@@ -41,9 +40,6 @@ const Footer = () => {
           <div>
             <h4 className={styles.heading}>Social</h4>
             <div className={styles.social}>
-              <a href="#" className={styles.socialLink}><Github size={20} /></a>
-              <a href="#" className={styles.socialLink}><Twitter size={20} /></a>
-              <a href="#" className={styles.socialLink}><Linkedin size={20} /></a>
             </div>
           </div>
         </div>
