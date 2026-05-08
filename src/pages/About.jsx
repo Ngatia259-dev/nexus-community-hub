@@ -363,7 +363,6 @@ export default function About() {
 
       <div className="about-page">
 
-        {/* ── HERO ── */}
         <section className="hero">
           <div className="hero-grid" />
 
