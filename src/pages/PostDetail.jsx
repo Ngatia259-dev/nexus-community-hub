@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useFetch } from "../hooks/useFetch";
+import { useFetch } from "../hooks";
 import Avatar from "../components/shared/Avatar";
 import Badge from "../components/shared/Badge";
 import Button from "../components/shared/Button";
