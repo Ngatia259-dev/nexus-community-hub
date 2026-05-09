@@ -20,8 +20,11 @@ Nexus is a premium community platform for developers to share projects, find job
 ## 👥 Team & Collaboration
 
 If you are a contributor, please read the **[TEAM_GUIDE.md](./TEAM_GUIDE.md)** for:
+
 - Individual task assignments.
+
 - Git branching workflow.
+
 - **Styling Rules**: We use **CSS Modules** only (No Tailwind).
 
 ## 🎨 Tech Stack
@@ -48,18 +51,31 @@ Built with ❤️ for the community.
 
 -🌟 Core Features
 -🔗 Networking
+
 -Create professional profiles
+
 -Connect with like-minded people
+
 -Discover communities and collaborators
+
 -Build meaningful professional relationships
+
 ##🧩 Project Collaboration
+
 -Create and manage projects
+
 -Find contributors and teammate
+
 ##💼 Career Opportunities
+
 -Discover internships and jobs
+
 -Showcase skills and portfolios
+
 -Recruit talent for projects or companies
+
 -Match opportunities with the right people
+
 ## 🎯 Vision
 
 -We believe the future of work and innovation is collaborative.
