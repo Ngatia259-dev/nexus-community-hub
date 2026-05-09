@@ -1,0 +1,33 @@
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--nexus-border);
+  color: var(--nexus-text);
+  font-weight: 500;
+}
+
+.initials {
+  background-color: var(--nexus-primary);
+  color: white;
+}
+
+.sm {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.md {
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.lg {
+  width: 64px;
+  height: 64px;
+  font-size: 24px;
+}

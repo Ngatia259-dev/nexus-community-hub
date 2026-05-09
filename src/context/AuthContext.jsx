@@ -6,29 +6,84 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Mock persistent login check
-    const savedUser = localStorage.getItem('nexus_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+  // Helper to fetch current user
+  const fetchCurrentUser = async (token) => {
+    try {
+      const response = await fetch('/api/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if (data.success) {
+        setUser(data.data);
+      } else {
+        logout();
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      logout();
     }
-    setLoading(false);
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('nexus_token');
+    if (token) {
+      fetchCurrentUser(token).finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
   }, []);
 
-  const login = (userData) => {
-    // In a real app, this would verify with a backend
-    const userObj = { ...userData, id: '1', name: 'Ngatia dev', username: 'Ngatia259-dev', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ngatia' };
-    setUser(userObj);
-    localStorage.setItem('nexus_user', JSON.stringify(userObj));
+  const login = async (email, password) => {
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await response.json();
+      if (data.success) {
+        localStorage.setItem('nexus_token', data.token);
+        await fetchCurrentUser(data.token);
+        return { success: true };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      return { success: false, message: "Server error during login" };
+    }
+  };
+
+  const register = async (name, email, password) => {
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await response.json();
+      if (data.success) {
+        localStorage.setItem('nexus_token', data.token);
+        await fetchCurrentUser(data.token);
+        return { success: true };
+      } else {
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      console.error("Register error:", error);
+      return { success: false, message: "Server error during registration" };
+    }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('nexus_user');
+    localStorage.removeItem('nexus_token');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
