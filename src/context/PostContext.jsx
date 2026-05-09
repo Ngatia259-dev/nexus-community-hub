@@ -11,49 +11,65 @@ export const PostProvider = ({ children }) => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      // Mock data fetching from JSONPlaceholder
-      const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=10');
+      const response = await fetch('/api/posts');
       const data = await response.json();
       
-      // Enrich data with Nexus-specific fields
-      const enrichedPosts = data.map(post => ({
-        ...post,
-        likes: Math.floor(Math.random() * 100),
-        author: {
-          name: `User ${post.userId}`,
-          username: `user${post.userId}`,
-          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.userId}`
-        },
-        date: new Date().toLocaleDateString(),
-        category: 'Engineering'
-      }));
-      
-      setPosts(enrichedPosts);
-      setError(null);
+      if (data.success) {
+        // Map backend fields to frontend expectations
+        const enrichedPosts = data.data.map(post => ({
+          ...post,
+          id: post._id,
+          body: post.content,
+          excerpt: post.content.substring(0, 150) + '...',
+          likes: post.likes ? post.likes.length : 0,
+          date: post.createdAt,
+          author: post.author || { name: 'Unknown', avatar: '' }
+        }));
+        setPosts(enrichedPosts);
+        setError(null);
+      } else {
+        setError(data.message || 'Failed to fetch posts');
+      }
     } catch (err) {
-      setError('Failed to fetch posts');
+      setError('Network error fetching posts');
     } finally {
       setLoading(false);
     }
   };
 
-  const addPost = (newPost) => {
-    const postWithMeta = {
-      ...newPost,
-      id: posts.length + 1,
-      userId: 1,
-      likes: 0,
-      date: new Date().toLocaleDateString(),
-      author: {
-        name: 'Ngatia dev',
-        username: 'Ngatia259-dev',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ngatia'
+  const addPost = async (newPost) => {
+    const token = localStorage.getItem('nexus_token');
+    if (!token) return { success: false, message: 'Not logged in' };
+
+    try {
+      const response = await fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: newPost.title,
+          content: newPost.body || newPost.content,
+          tags: newPost.tags || [],
+          category: newPost.category || 'General'
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        fetchPosts(); // Refresh list to get populated author data
+        return { success: true };
       }
-    };
-    setPosts([postWithMeta, ...posts]);
+      return { success: false, message: data.message };
+    } catch (err) {
+      console.error("Add post error:", err);
+      return { success: false, message: 'Network error' };
+    }
   };
 
   const likePost = (postId) => {
+    // In a fully complete app, this would hit PUT /api/posts/:id/like
+    // For now we optimistically update locally
     setPosts(posts.map(p => 
       p.id === postId ? { ...p, likes: p.likes + 1 } : p
     ));
@@ -61,7 +77,7 @@ export const PostProvider = ({ children }) => {
 
   const filteredPosts = posts.filter(post => 
     post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.body.toLowerCase().includes(searchQuery.toLowerCase())
+    (post.body && post.body.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (

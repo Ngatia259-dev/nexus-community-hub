@@ -11,14 +11,12 @@ const PostDetail = () => {
   const [liked, setLiked] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const { data: post, loading: postLoading, error: postError } =
-    useFetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
+  // Fetch from the local backend
+  const { data: response, loading: postLoading, error: postError } =
+    useFetch(`/api/posts/${id}`);
 
-  const { data: author } = useFetch(
-    post?.userId
-      ? `https://jsonplaceholder.typicode.com/users/${post.userId}`
-      : null
-  );
+  const post = response?.data;
+  const author = post?.author;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -45,7 +43,7 @@ const PostDetail = () => {
       </nav>
 
       <div className="flex gap-2 mb-4">
-        {["community", "tech", "discussion"].map(tag => (
+        {post.tags && post.tags.map(tag => (
           <Badge key={tag}>{tag}</Badge>
         ))}
       </div>
@@ -57,7 +55,7 @@ const PostDetail = () => {
         <span>{author?.name || "Loading..."}</span>
       </div>
 
-      <p className="text-gray-700 leading-relaxed mb-10">{post.body}</p>
+      <p className="text-gray-700 leading-relaxed mb-10 whitespace-pre-wrap">{post.content}</p>
 
       <div className="flex gap-3 mb-10">
         <Button onClick={() => setLiked(l => !l)}>
@@ -78,64 +76,81 @@ const PostDetail = () => {
         </div>
       )}
 
-      <CommentsSection postId={id} />
+      <CommentsSection postId={id} initialComments={post.comments || []} />
     </div>
   );
 };
 
-const CommentsSection = ({ postId }) => {
-  const { data: fetched, loading, error } =
-    useFetch(`https://jsonplaceholder.typicode.com/comments?postId=${postId}`);
-
-  // only tracks user-added comments — fetched ones come directly from useFetch
-  const [newComments, setNewComments] = useState([]);
-  const [form, setForm] = useState({ name: "", body: "" });
+const CommentsSection = ({ postId, initialComments }) => {
+  const [comments, setComments] = useState(initialComments);
+  const [form, setForm] = useState({ content: "" });
   const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const allComments = [...(newComments), ...(fetched || [])];
+  const handleSubmit = async () => {
+    if (form.content.length < 5) { setFormError("Comment too short."); return; }
+    
+    const token = localStorage.getItem('nexus_token');
+    if (!token) {
+      setFormError("You must be logged in to comment.");
+      return;
+    }
 
-  const handleSubmit = () => {
-    if (!form.name.trim()) { setFormError("Name is required."); return; }
-    if (form.body.length < 5) { setFormError("Comment too short."); return; }
-    setNewComments(prev => [{ id: Date.now(), ...form }, ...prev]);
-    setForm({ name: "", body: "" });
-    setFormError("");
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`/api/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ content: form.content })
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        // Optimistically add the returned comment
+        // (Note: The backend might just return the comment without populated author, 
+        // but for now we append it as-is)
+        setComments(prev => [data.data, ...prev]);
+        setForm({ content: "" });
+        setFormError("");
+      } else {
+        setFormError(data.message || "Failed to post comment.");
+      }
+    } catch (err) {
+      setFormError("Network error.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <section className="mt-10">
       <h2 className="text-xl font-bold mb-6">
-        Comments ({allComments.length})
+        Comments ({comments.length})
       </h2>
 
       <div className="bg-gray-50 rounded-xl p-4 mb-8 border">
-        <input
-          type="text"
-          placeholder="Your name"
-          value={form.name}
-          onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-          className="w-full px-3 py-2 mb-3 text-sm border rounded-lg"
-        />
         <textarea
           placeholder="Write a comment..."
-          value={form.body}
-          onChange={e => setForm(f => ({ ...f, body: e.target.value }))}
+          value={form.content}
+          onChange={e => setForm({ content: e.target.value })}
           rows={3}
           className="w-full px-3 py-2 mb-3 text-sm border rounded-lg resize-none"
         />
         {formError && <p className="text-xs text-red-500 mb-2">{formError}</p>}
         <div className="flex justify-end">
-          <Button onClick={handleSubmit}>Post comment</Button>
+          <Button onClick={handleSubmit} disabled={isSubmitting}>
+            {isSubmitting ? 'Posting...' : 'Post comment'}
+          </Button>
         </div>
       </div>
 
-      {loading && <Loader />}
-      {error && <p className="text-red-500 text-sm">Failed to load comments.</p>}
-
-      {allComments.map(c => (
-        <div key={c.id} className="py-4 border-b">
-          <p className="text-sm font-semibold">{c.name}</p>
-          <p className="text-sm text-gray-600 mt-1">{c.body}</p>
+      {comments.map(c => (
+        <div key={c._id || c.id} className="py-4 border-b">
+          <p className="text-sm font-semibold">{c.author?.name || 'Anonymous'}</p>
+          <p className="text-sm text-gray-600 mt-1">{c.content}</p>
         </div>
       ))}
     </section>
