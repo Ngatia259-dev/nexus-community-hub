@@ -1,0 +1,173 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+.stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.statBox {
+  background-color: #1a73e8;
+  color: white;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statNumber {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.search {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  outline: none;
+  color: #1a202c;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.userCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.avatar {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background-color: #1a73e8;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.username {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.role {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.connectionsSection {
+  margin-top: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 1rem;
+}
+
+.connectionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.connectionItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.smallAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #1a73e8;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.connectionName {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.connectionRole {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    flex-direction: row;
+  }
+}
