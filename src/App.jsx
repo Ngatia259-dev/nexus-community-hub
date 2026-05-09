@@ -9,6 +9,8 @@ import Network from './pages/Network';
 import Careers from './pages/Careers';
 import Profile from './pages/Profile';
 import About from './pages/About';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import Sidebar from './components/Layout/Sidebar';
@@ -37,6 +39,8 @@ function App() {
                   <Route path="/careers" element={<Careers />} />
                   <Route path="/profile/:username" element={<Profile />} />
                   <Route path="/about" element={<About />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
                   <Route path="*" element={<div className="text-center py-20">Page Not Found</div>} />
                 </Routes>
               </div>

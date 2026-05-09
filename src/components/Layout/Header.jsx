@@ -46,12 +46,16 @@ const Header = () => {
               <button className={styles.iconBtn}>
                 <Bell size={20} />
               </button>
-              <Link to={`/profile/${user.username}`} className={styles.avatar}>
-                <img src={user.avatar} alt={user.name} />
+              <Button onClick={() => logout()} variant="secondary" size="sm" style={{ marginLeft: '1rem' }}>Logout</Button>
+              <Link to={`/profile/${user._id}`} className={styles.avatar}>
+                <img src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0ea5e9&color=fff`} alt={user.name} />
               </Link>
             </>
           ) : (
-            <Button onClick={() => logout()} size="sm">Login</Button>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <Button onClick={() => navigate('/login')} variant="secondary" size="sm">Login</Button>
+              <Button onClick={() => navigate('/register')} size="sm">Sign up</Button>
+            </div>
           )}
 
           <button 
@@ -69,11 +73,14 @@ const Header = () => {
           <Link to="/network" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>Network</Link>
           <Link to="/careers" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>Careers</Link>
           <Link to="/about" className={styles.mobileNavLink} onClick={() => setIsMenuOpen(false)}>About</Link>
-          <div style={{ borderTop: '1px solid var(--nexus-border)', paddingTop: '12px', marginTop: '4px' }}>
+          <div style={{ borderTop: '1px solid var(--nexus-border)', paddingTop: '12px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {user ? (
               <Button onClick={() => { logout(); setIsMenuOpen(false); }} variant="secondary" style={{ width: '100%' }}>Logout</Button>
             ) : (
-              <Button onClick={() => { logout(); setIsMenuOpen(false); }} style={{ width: '100%' }}>Login</Button>
+              <>
+                <Button onClick={() => { navigate('/login'); setIsMenuOpen(false); }} variant="secondary" style={{ width: '100%' }}>Login</Button>
+                <Button onClick={() => { navigate('/register'); setIsMenuOpen(false); }} style={{ width: '100%' }}>Sign up</Button>
+              </>
             )}
           </div>
         </div>
