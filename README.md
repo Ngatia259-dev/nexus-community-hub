@@ -60,13 +60,13 @@ Built with ❤️ for the community.
 
 -Build meaningful professional relationships
 
-##🧩 Project Collaboration
+## 🧩 Project Collaboration
 
 -Create and manage projects
 
 -Find contributors and teammate
 
-##💼 Career Opportunities
+## 💼 Career Opportunities
 
 -Discover internships and jobs
 
