@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config/api.js';
 
 // useFetch Hook
 export const useFetch = (url) => {
@@ -9,7 +10,8 @@ export const useFetch = (url) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(url);
+        const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+        const response = await fetch(fullUrl);
         if (!response.ok) throw new Error('Network response was not ok');
         const result = await response.json();
         setData(result);

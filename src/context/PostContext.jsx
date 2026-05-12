@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { apiFetch } from '../config/api.js';
 
 const PostContext = createContext();
 
@@ -11,7 +12,7 @@ export const PostProvider = ({ children }) => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/posts');
+      const response = await apiFetch('/posts');
       const data = await response.json();
       
       if (data.success) {
@@ -42,7 +43,7 @@ export const PostProvider = ({ children }) => {
     if (!token) return { success: false, message: 'Not logged in' };
 
     try {
-      const response = await fetch('/api/posts', {
+      const response = await apiFetch('/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

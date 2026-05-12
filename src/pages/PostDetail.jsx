@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useFetch } from "../hooks";
+import { apiFetch } from "../config/api.js";
 import Avatar from "../components/shared/Avatar";
 import Badge from "../components/shared/Badge";
 import Button from "../components/shared/Button";
@@ -98,7 +99,7 @@ const CommentsSection = ({ postId, initialComments }) => {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`/api/posts/${postId}/comments`, {
+      const response = await apiFetch(`/posts/${postId}/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
