@@ -20,7 +20,9 @@ const app = express();
 app.use(express.json());
 
 // Enable CORS
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || '*'
+}));
 
 // Logger middleware
 app.use(requestLogger);
