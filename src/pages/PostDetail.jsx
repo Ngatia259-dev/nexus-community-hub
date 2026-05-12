@@ -14,7 +14,7 @@ const PostDetail = () => {
 
   // Fetch from the local backend
   const { data: response, loading: postLoading, error: postError } =
-    useFetch(`/api/posts/${id}`);
+    useFetch(`/posts/${id}`);
 
   const post = response?.data;
   const author = post?.author;
@@ -91,7 +91,7 @@ const CommentsSection = ({ postId, initialComments }) => {
   const handleSubmit = async () => {
     if (form.content.length < 5) { setFormError("Comment too short."); return; }
     
-    const token = localStorage.getItem('nexus_token');
+    const token = localStorage.getItem('token');
     if (!token) {
       setFormError("You must be logged in to comment.");
       return;
@@ -107,6 +107,13 @@ const CommentsSection = ({ postId, initialComments }) => {
         },
         body: JSON.stringify({ content: form.content })
       });
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        throw new Error(`Server returned non-JSON response: ${text.substring(0, 50)}...`);
+      }
+
       const data = await response.json();
       
       if (data.success) {

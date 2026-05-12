@@ -10,7 +10,14 @@ export const useFetch = (url) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+        let fullUrl;
+        if (url.startsWith('http')) {
+          fullUrl = url;
+        } else {
+          // Ensure URL starts with / if not already present
+          const formattedPath = url.startsWith('/') ? url : `/${url}`;
+          fullUrl = `${API_BASE_URL}${formattedPath}`;
+        }
         const response = await fetch(fullUrl);
         if (!response.ok) throw new Error('Network response was not ok');
         const result = await response.json();

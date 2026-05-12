@@ -13,6 +13,15 @@ export const PostProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await apiFetch('/posts');
+      
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response from /posts:", text.substring(0, 100));
+        setError(`Server error: Expected JSON but got ${contentType || 'plain text'}`);
+        return;
+      }
+
       const data = await response.json();
       
       if (data.success) {
@@ -32,14 +41,14 @@ export const PostProvider = ({ children }) => {
         setError(data.message || 'Failed to fetch posts');
       }
     } catch (err) {
-      setError('Network error fetching posts');
+      setError(`Network error: ${err.message}`);
     } finally {
       setLoading(false);
     }
   };
 
   const addPost = async (newPost) => {
-    const token = localStorage.getItem('nexus_token');
+    const token = localStorage.getItem('token');
     if (!token) return { success: false, message: 'Not logged in' };
 
     try {
@@ -56,6 +65,13 @@ export const PostProvider = ({ children }) => {
           category: newPost.category || 'General'
         })
       });
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        throw new Error(`Server returned non-JSON response: ${text.substring(0, 50)}...`);
+      }
+
       const data = await response.json();
       if (data.success) {
         fetchPosts(); // Refresh list to get populated author data
@@ -64,7 +80,7 @@ export const PostProvider = ({ children }) => {
       return { success: false, message: data.message };
     } catch (err) {
       console.error("Add post error:", err);
-      return { success: false, message: 'Network error' };
+      return { success: false, message: err.message || 'Network error' };
     }
   };
 

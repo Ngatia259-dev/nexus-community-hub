@@ -15,6 +15,15 @@ export const AuthProvider = ({ children }) => {
           'Authorization': `Bearer ${token}`
         }
       });
+      
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response from /auth/me:", text.substring(0, 100));
+        logout();
+        return;
+      }
+
       const data = await response.json();
       if (data.success) {
         setUser(data.data);
@@ -28,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('nexus_token');
+    const token = localStorage.getItem('token');
     if (token) {
       fetchCurrentUser(token).finally(() => setLoading(false));
     } else {
@@ -43,9 +52,16 @@ export const AuthProvider = ({ children }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        throw new Error(`Server returned non-JSON response: ${text.substring(0, 50)}...`);
+      }
+
       const data = await response.json();
       if (data.success) {
-        localStorage.setItem('nexus_token', data.token);
+        localStorage.setItem('token', data.token);
         await fetchCurrentUser(data.token);
         return { success: true };
       } else {
@@ -53,7 +69,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      return { success: false, message: "Server error during login" };
+      return { success: false, message: error.message || "Server error during login" };
     }
   };
 
@@ -64,9 +80,16 @@ export const AuthProvider = ({ children }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
       });
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        throw new Error(`Server returned non-JSON response: ${text.substring(0, 50)}...`);
+      }
+
       const data = await response.json();
       if (data.success) {
-        localStorage.setItem('nexus_token', data.token);
+        localStorage.setItem('token', data.token);
         await fetchCurrentUser(data.token);
         return { success: true };
       } else {
@@ -74,13 +97,13 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Register error:", error);
-      return { success: false, message: "Server error during registration" };
+      return { success: false, message: error.message || "Server error during registration" };
     }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('nexus_token');
+    localStorage.removeItem('token');
   };
 
   return (
